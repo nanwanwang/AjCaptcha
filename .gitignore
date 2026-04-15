@@ -52,3 +52,11 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Frontend
+node_modules/
+dist/
+.cache/
+.temp/
+yarn-error.log*
+npm-debug.log*

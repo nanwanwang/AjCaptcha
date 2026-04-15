@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AJ-Captcha NuGet 测试台</title>
+  <link rel="stylesheet" href="/vendor/ajcaptcha/css/verify.css">
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">AJ-Captcha .NET · NuGet Test Bench</p>
+        <h1>验证码接入测试台</h1>
+        <p class="hero-text">
+          这个页面测试的是“引用包后的真实行为”。页面直接调用当前站点的验证码接口和模拟登录接口，
+          用来确认 NuGet 包、配置、页面交互三件事是否一起工作正常。
+        </p>
+        <div class="status-strip">
+          <span class="status-pill" id="origin-pill">Origin: 加载中</span>
+          <span class="status-pill" id="cache-pill">Cache: 加载中</span>
+          <span class="status-pill" id="aes-pill">AES: 加载中</span>
+        </div>
+      </div>
+      <aside class="hero-note">
+        <h2>当前测试范围</h2>
+        <ul class="hero-list">
+          <li>NuGet 包引用</li>
+          <li>滑块验证码</li>
+          <li>文字点选验证码</li>
+          <li>模拟登录二次校验</li>
+        </ul>
+      </aside>
+    </header>
+
+    <main class="workspace">
+      <section class="panel panel-login">
+        <div class="panel-head">
+          <div>
+            <p class="panel-kicker">Interactive Flow</p>
+            <h2>模拟登录</h2>
+          </div>
+          <div class="chip-row">
+            <span class="chip">POST /captcha/get</span>
+            <span class="chip">POST /captcha/check</span>
+            <span class="chip">POST /captcha/verify</span>
+          </div>
+        </div>
+
+        <div class="login-layout">
+          <div class="login-stack">
+            <div class="form-grid">
+              <label class="field">
+                <span>用户名</span>
+                <input id="username" type="text" value="demo" autocomplete="off">
+              </label>
+              <label class="field">
+                <span>密码</span>
+                <input id="password" type="password" value="secret" autocomplete="off">
+              </label>
+            </div>
+
+            <div class="type-picker">
+              <p class="picker-label">本次登录使用哪种验证码</p>
+              <div class="segmented" id="captcha-type-switch">
+                <button class="segment is-active" type="button" data-captcha-type="blockPuzzle">滑块验证</button>
+                <button class="segment" type="button" data-captcha-type="clickWord">文字点选</button>
+              </div>
+            </div>
+
+            <div class="mode-card" id="selected-mode-card">
+              <p class="mode-eyebrow">当前模式</p>
+              <h3 id="selected-mode-title">滑块验证</h3>
+              <p id="selected-mode-text">适合先确认接口和拖动校验流程是否正常。</p>
+            </div>
+
+            <div class="action-grid action-grid-single">
+              <button id="login-trigger" class="trigger trigger-primary" type="button">开始滑块验证并登录</button>
+            </div>
+
+            <button id="slider-login-proxy" class="proxy-trigger" type="button" aria-hidden="true" tabindex="-1">slider proxy</button>
+            <button id="point-login-proxy" class="proxy-trigger" type="button" aria-hidden="true" tabindex="-1">point proxy</button>
+
+            <div id="slider-pop"></div>
+            <div id="point-pop"></div>
+
+            <div class="result-board" id="login-result">
+              <p class="result-label">当前结果</p>
+              <p class="result-title">等待验证</p>
+              <p class="result-text">填写用户名和密码后，点击按钮开始一次完整的模拟登录。</p>
+            </div>
+          </div>
+
+          <aside class="service-panel">
+            <div class="service-card">
+              <p class="service-label">服务检查</p>
+              <ul class="service-list">
+                <li><span>状态接口</span><a href="/api/demo/status" target="_blank" rel="noreferrer">打开</a></li>
+                <li><span>验证码接口</span><a href="/swagger" target="_blank" rel="noreferrer">Swagger</a></li>
+                <li><span>首页地址</span><span id="service-origin">加载中</span></li>
+              </ul>
+            </div>
+
+            <div class="service-card payload-card">
+              <div class="payload-head">
+                <div>
+                  <p class="service-label">最近一次响应</p>
+                  <h3 id="payload-title">等待请求</h3>
+                </div>
+                <button id="clear-log" class="ghost-btn" type="button">清空日志</button>
+              </div>
+              <pre id="payload-view" class="payload-console">{
+  "message": "页面加载后会显示最近一次状态或登录响应"
+}</pre>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="panel panel-log">
+        <div class="panel-head">
+          <div>
+            <p class="panel-kicker">Request Trace</p>
+            <h2>事件记录</h2>
+          </div>
+        </div>
+        <pre id="event-log" class="log-console">[system] 页面已加载，等待初始化…</pre>
+      </section>
+
+      <section class="panel panel-preview">
+        <div class="panel-head">
+          <div>
+            <p class="panel-kicker">Fixed Preview</p>
+            <h2>嵌入式预览</h2>
+          </div>
+        </div>
+
+        <div class="preview-grid">
+          <article class="preview-card">
+            <div class="preview-header">
+              <h3>滑块验证码</h3>
+              <span>blockPuzzle</span>
+            </div>
+            <div id="slider-fixed" class="verify-host"></div>
+          </article>
+
+          <article class="preview-card">
+            <div class="preview-header">
+              <h3>文字点选验证码</h3>
+              <span>clickWord</span>
+            </div>
+            <div id="point-fixed" class="verify-host"></div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/vendor/ajcaptcha/js/jquery.min.js"></script>
+  <script src="/vendor/ajcaptcha/js/crypto-js.js"></script>
+  <script src="/vendor/ajcaptcha/js/ase.js"></script>
+  <script src="/vendor/ajcaptcha/js/verify.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
