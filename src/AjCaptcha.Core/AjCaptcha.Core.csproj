@@ -3,8 +3,8 @@
     <AssemblyName>AjCaptcha.Core</AssemblyName>
     <RootNamespace>AjCaptcha.Core</RootNamespace>
     <Description>Cross-platform AJ-Captcha core library for .NET.</Description>
-    <PackageId>Nanwanwang.AjCaptcha.Core</PackageId>
-    <Version>0.1.3</Version>
+    <PackageId>AjCaptcha.Core</PackageId>
+    <Version>0.1.4</Version>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 

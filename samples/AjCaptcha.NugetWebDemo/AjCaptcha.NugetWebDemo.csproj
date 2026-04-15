@@ -3,14 +3,14 @@
     <AssemblyName>AjCaptcha.NugetWebDemo</AssemblyName>
     <RootNamespace>AjCaptcha.NugetWebDemo</RootNamespace>
     <AjCaptchaArtifactsDir>$(MSBuildThisFileDirectory)..\..\artifacts</AjCaptchaArtifactsDir>
-    <AjCaptchaPackagePath>$(AjCaptchaArtifactsDir)\Nanwanwang.AjCaptcha.AspNetCore.0.1.3.nupkg</AjCaptchaPackagePath>
+    <AjCaptchaPackagePath>$(AjCaptchaArtifactsDir)\AjCaptcha.AspNetCore.0.1.4.nupkg</AjCaptchaPackagePath>
     <UseAjCaptchaPackageReference Condition="Exists('$(AjCaptchaPackagePath)')">true</UseAjCaptchaPackageReference>
     <UseAjCaptchaPackageReference Condition="'$(UseAjCaptchaPackageReference)' == ''">false</UseAjCaptchaPackageReference>
     <RestoreAdditionalProjectSources>$(RestoreAdditionalProjectSources);$(MSBuildThisFileDirectory)..\..\artifacts</RestoreAdditionalProjectSources>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(UseAjCaptchaPackageReference)' == 'true'">
-    <PackageReference Include="Nanwanwang.AjCaptcha.AspNetCore" Version="0.1.3" />
+    <PackageReference Include="AjCaptcha.AspNetCore" Version="0.1.4" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(UseAjCaptchaPackageReference)' != 'true'">

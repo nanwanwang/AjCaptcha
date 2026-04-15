@@ -3,8 +3,8 @@
     <AssemblyName>AjCaptcha.AspNetCore</AssemblyName>
     <RootNamespace>AjCaptcha.AspNetCore</RootNamespace>
     <Description>ASP.NET Core integration for AJ-Captcha .NET.</Description>
-    <PackageId>Nanwanwang.AjCaptcha.AspNetCore</PackageId>
-    <Version>0.1.3</Version>
+    <PackageId>AjCaptcha.AspNetCore</PackageId>
+    <Version>0.1.4</Version>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 

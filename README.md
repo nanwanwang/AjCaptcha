@@ -36,8 +36,8 @@
 
 ## NuGet 包名
 
-- `Nanwanwang.AjCaptcha.Core`
-- `Nanwanwang.AjCaptcha.AspNetCore`
+- `AjCaptcha.Core`
+- `AjCaptcha.AspNetCore`
 
 ## 快速接入
 
@@ -112,8 +112,8 @@ https://nuget.pkg.github.com/nanwanwang/index.json
 ```bash
 dotnet nuget add source --username nanwanwang --password YOUR_GITHUB_PAT --store-password-in-clear-text --name github "https://nuget.pkg.github.com/nanwanwang/index.json"
 
-dotnet nuget push artifacts/Nanwanwang.AjCaptcha.Core.0.1.3.nupkg --source github --api-key YOUR_GITHUB_PAT
-dotnet nuget push artifacts/Nanwanwang.AjCaptcha.AspNetCore.0.1.3.nupkg --source github --api-key YOUR_GITHUB_PAT
+dotnet nuget push artifacts/AjCaptcha.Core.0.1.4.nupkg --source github --api-key YOUR_GITHUB_PAT
+dotnet nuget push artifacts/AjCaptcha.AspNetCore.0.1.4.nupkg --source github --api-key YOUR_GITHUB_PAT
 ```
 
 发布成功后，可以在这里看到包：
