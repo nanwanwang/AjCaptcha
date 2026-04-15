@@ -1,0 +1,64 @@
+name: Publish GitHub Packages
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: github-packages-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      DOTNET_NOLOGO: true
+      PACKAGE_OUTPUT_DIR: ${{ github.workspace }}/artifacts
+      GITHUB_PACKAGES_SOURCE: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore AjCaptcha.sln
+
+      - name: Build
+        run: dotnet build AjCaptcha.sln -c Release --no-restore
+
+      - name: Test
+        run: dotnet test AjCaptcha.sln -c Release --no-build
+
+      - name: Pack
+        run: |
+          dotnet pack src/AjCaptcha.Core/AjCaptcha.Core.csproj -c Release --no-build -o "$PACKAGE_OUTPUT_DIR"
+          dotnet pack src/AjCaptcha.AspNetCore/AjCaptcha.AspNetCore.csproj -c Release --no-build -o "$PACKAGE_OUTPUT_DIR"
+
+      - name: Add GitHub Packages source
+        run: |
+          dotnet nuget remove source github >/dev/null 2>&1 || true
+          dotnet nuget add source \
+            --username "${{ github.repository_owner }}" \
+            --password "${{ secrets.GITHUB_TOKEN }}" \
+            --store-password-in-clear-text \
+            --name github \
+            "$GITHUB_PACKAGES_SOURCE"
+
+      - name: Push packages
+        run: dotnet nuget push "$PACKAGE_OUTPUT_DIR"/*.nupkg --source github --api-key "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Upload package artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: github-packages-nupkg
+          path: artifacts/*.nupkg
