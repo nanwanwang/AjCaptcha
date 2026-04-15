@@ -31,13 +31,25 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Restore
-        run: dotnet restore AjCaptcha.sln
+        run: |
+          dotnet restore src/AjCaptcha.Core/AjCaptcha.Core.csproj
+          dotnet restore src/AjCaptcha.AspNetCore/AjCaptcha.AspNetCore.csproj
+          dotnet restore samples/AjCaptcha.Sample/AjCaptcha.Sample.csproj
+          dotnet restore tests/AjCaptcha.Core.Tests/AjCaptcha.Core.Tests.csproj
+          dotnet restore tests/AjCaptcha.AspNetCore.Tests/AjCaptcha.AspNetCore.Tests.csproj
 
       - name: Build
-        run: dotnet build AjCaptcha.sln -c Release --no-restore
+        run: |
+          dotnet build src/AjCaptcha.Core/AjCaptcha.Core.csproj -c Release --no-restore
+          dotnet build src/AjCaptcha.AspNetCore/AjCaptcha.AspNetCore.csproj -c Release --no-restore
+          dotnet build samples/AjCaptcha.Sample/AjCaptcha.Sample.csproj -c Release --no-restore
+          dotnet build tests/AjCaptcha.Core.Tests/AjCaptcha.Core.Tests.csproj -c Release --no-restore
+          dotnet build tests/AjCaptcha.AspNetCore.Tests/AjCaptcha.AspNetCore.Tests.csproj -c Release --no-restore
 
       - name: Test
-        run: dotnet test AjCaptcha.sln -c Release --no-build
+        run: |
+          dotnet test tests/AjCaptcha.Core.Tests/AjCaptcha.Core.Tests.csproj -c Release --no-build
+          dotnet test tests/AjCaptcha.AspNetCore.Tests/AjCaptcha.AspNetCore.Tests.csproj -c Release --no-build
 
       - name: Pack
         run: |
